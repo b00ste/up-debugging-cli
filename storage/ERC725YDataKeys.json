@@ -1,0 +1,81 @@
+{
+    "LSP1": {
+        "LSP1UniversalReceiverDelegatePrefix": {
+            "dataKey": "0x0cfc51aec37c55a4d0b10000",
+            "dataKeyMessage": "Please provide a typeId that is handled in the Universal Receiver Delegate that you want to add.\n(must be a valid bytes32, a string or a number)\n",
+            "dataKeyType": "bytes32",
+            "dataValueMessage": "Please provide the address of the Universal Receiver Delegate that you want to add.\n(must be a valid etehreum address or a number)\n",
+            "dataValueType": "address"
+        },
+        "LSP1UniversalReceiverDelegate": {
+            "dataKey": "0x0cfc51aec37c55a4d0b1a65c6255c4bf2fbdf6277f3cc0730c45b828b6db8b47",
+            "dataValueMessage": "Please provide the address of the Universal Receiver Delegate that you want to add.\n(must be a valid etehreum address or a number)\n",
+            "dataValueType": "address"
+        }
+    },
+    "LSP3": {
+        "SupportedStandards_LSP3": {
+            "key": "0xeafec4d89fa9619884b60000abe425d64acd861a49b8ddf5c0b6962110481f38",
+            "value": "0xabe425d6"
+        },
+
+        "LSP3Profile": {
+            "dataKey": "0x5ef83ad9559033e6e941db7d7c495acdce616347d28e90c7ce47cbfcfcad3bc5",
+            "dataValueMessage": "Please provide the metadata for your Universal Profile.",
+            "dataValueType": "bytes"
+        }
+    },
+    "LSP6": {
+        "AddressPermissions[]": {
+            "length": "0xdf30dba06db6a30e65354d9a64c609861f089545ca58c6b4dbe31a5f338cb0e3",
+            "index": "0xdf30dba06db6a30e65354d9a64c60986"
+        },
+
+        "AddressPermissions:Permissions": {
+            "dataKey": "0x4b80742de2bf82acb3630000",
+            "dataKeyMessage": "Please provide a controller address whose Permissions you want to update.\n(must be a valid etehreum address or a number)\n",
+            "dataKeyType": "address",
+            "dataValueMessage": "Please provide a Permissions BitArray for the controller you want to set.\n(must be a valid bytes32, a string or a number)\n",
+            "dataValueType": "bytes32"
+        },
+
+        "AddressPermissions:AllowedERC725YDataKeys": {
+            "dataKey": "0x4b80742de2bf866c29110000",
+            "dataKeyMessage": "Please provide a controller address whose AllowedERC725YDataKeys you want to update.\n(must be a valid etehreum address or a number)\n",
+            "dataKeyType": "address",
+            "dataValueMessage": "Please provide a CompactBytesArray of AllowedERC725YDataKeys for the controller you want to set.\n(must be a valid CompactBytesArray of bytes)\n",
+            "dataValueType": "bytes[CompactBytesArray]"
+        },
+
+        "AddressPermissions:AllowedCalls": {
+            "dataKey": "0x4b80742de2bf393a64c70000",
+            "dataKeyMessage": "Please provide a controller address whose AllowedCalls you want to update.\n(must be a valid etehreum address or a number)\n",
+            "dataKeyType": "address",
+            "dataValueMessage": "Please provide a CompactBytesArray of AllowedCalls for the controller you want to set.\n(must be a valid CompactBytesArray of (bytes4,address,bytes4,bytes4))\n",
+            "dataValueType": "(bytes4,address,bytes4,bytes4)[CompactBytesArray]"
+        }
+    },
+    "LSP12": {
+        "LSP12IssuedAssetsMap": {
+            "dataKey": "0x74ac2555c10b9349e78f0000",
+            "dataKeyMessage": "Please provide an address of the asset that you have issued.\n(must be a valid etehreum address or a number)\n",
+            "dataKeyType": "address",
+            "dataValueMessage": "Please provide the bytes4 interface id and the bytes8 index belonging to the issued asset. (e.g. 0xcafecafe, 15)",
+            "dataValueType": "(bytes4,bytes8)"
+        },
+
+        "LSP12IssuedAssets[]": {
+            "length": "0x7c8c3416d6cda87cd42c71ea1843df28ac4850354f988d55ee2eaa47b6dc05cd",
+            "index": "0x7c8c3416d6cda87cd42c71ea1843df28"
+        }
+    },
+    "LSP17": {
+        "LSP17ExtensionPrefix": {
+            "dataKey": "0xcee78b4094da860110960000",
+            "dataKeyMessage": "Please provide a bytes4 selector of a method that you want to add as an extension.\n(must be a valid bytes4, a string or a number)\n",
+            "dataKeyType": "bytes4",
+            "dataValueMessage": "Please provide the address of the extension contract that you want to set.\n(must be a valid etehreum address or a number)\n",
+            "dataValueType": "address"
+        }
+    }
+}
