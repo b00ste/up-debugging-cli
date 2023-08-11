@@ -115,7 +115,7 @@ export const askForSecondaryContractInitializationCalldata = async () => {
                 name: 'extraParametersAfterPrimaryContractAddress',
                 type: 'input',
                 message:
-                    'Extra parameters before the primary contract address: (abi encoded value)\n',
+                    'Extra parameters after the primary contract address: (abi encoded value)\n',
                 default: '0x',
             });
 
@@ -175,7 +175,9 @@ export const askForPrimaryContractCreationBytecode = async () => {
     const contractName = await askForContractName();
     const constructorParams = await askForConstructorParams();
 
-    return lsp_artifacts[contractName].abi + constructorParams.substring(2);
+    return (
+        lsp_artifacts[contractName].bytecode + constructorParams.substring(2)
+    );
 };
 
 export const askForSecondaryContractCreationBytecode = async () => {
@@ -205,13 +207,13 @@ export const askForSecondaryContractCreationBytecode = async () => {
                 name: 'extraParametersAfterPrimaryContractAddress',
                 type: 'input',
                 message:
-                    'Extra parameters before the primary contract address: (abi encoded value)\n',
+                    'Extra parameters after the primary contract address: (abi encoded value)\n',
                 default: '0x',
             });
 
         return {
             creationBytecode:
-                lsp_artifacts[contractName].abi +
+                lsp_artifacts[contractName].bytecode +
                 extraParametersBeforePrimaryContractAddress.substring(2),
             addPrimaryContractAddress: true,
             extraConstructorParams: extraParametersAfterPrimaryContractAddress,
@@ -221,7 +223,7 @@ export const askForSecondaryContractCreationBytecode = async () => {
 
         return {
             creationBytecode:
-                lsp_artifacts[contractName].abi +
+                lsp_artifacts[contractName].bytecode +
                 constructorParams.substring(2),
             addPrimaryContractAddress: false,
             extraConstructorParams: '0x',
