@@ -1,13 +1,19 @@
 import UsedSalts from '../storage/UsedSalts.json' assert { type: 'json' };
 
-export const getDeployedUPs = async (
+export const getDeployedContractAddresses = async (
     publicAddress: string,
     chainId: string,
+    deployerName: string,
+    contractName: string,
 ) => {
-    const UPs = [];
-    for (const salt in UsedSalts[chainId][publicAddress]) {
-        UPs.push(UsedSalts[chainId][publicAddress][salt]);
+    const contractAddresses = [];
+    for (const salt in UsedSalts[chainId][deployerName][contractName][
+        publicAddress
+    ]) {
+        contractAddresses.push(
+            UsedSalts[chainId][deployerName][contractName][publicAddress][salt],
+        );
     }
 
-    return UPs;
+    return contractAddresses;
 };

@@ -1,16 +1,25 @@
 import inquirer from 'inquirer';
 import {
-    askForInitializeCalldata,
-    computeAddress,
-    deploy,
-} from './src/deploy_up';
+    askForDeployer,
+    askForContractName,
+    askForConstructorParams,
+} from './src/deployment/deploymentUtils';
 import { getAccount } from './src/get_account';
 import { getSalt } from './src/get_salt';
 import { generate } from './src/generate_salts';
 import { setRPC } from './src/select_rpc';
-import { getDeployedUPs } from './src/get_deployed_ups';
+import { getDeployedContractAddresses } from './src/get_deployed_ups';
 import { interactWithUP } from './src/interact_with_up';
 import { formatEther } from 'ethers';
+import {
+    LSP16ComputeAddress,
+    LSP16DeployContract,
+    askForInitializeCalldata,
+} from './src/deployment/lsp16_deployment';
+import {
+    LSP23ComputeAddresses,
+    LSP23DeployContracts,
+} from './src/deployment/lsp23_deployment';
 
 const main = async () => {
     console.clear();
@@ -25,8 +34,8 @@ const main = async () => {
                 '2. get secret balance',
                 '3. generate salts',
                 '4. check your salt',
-                '5. get up deployment address',
-                '6. deploy basic up',
+                '5. get contract deployment address',
+                '6. deploy contract',
                 '7. get your up addresses',
                 '8. interact with up',
             ],
@@ -45,62 +54,93 @@ const main = async () => {
                 console.log(`${formatEther(balance)} LYX`);
             } else if (main === '3. generate salts') {
                 await setRPC();
-                const { publicAddress } = await getAccount();
-                const salt_and_address = await generate(publicAddress);
-
-                console.log(`Salt found:\n${salt_and_address}`);
+                await generate();
             } else if (main === '4. check your salt') {
                 const salt = await getSalt();
 
                 console.log(salt);
-            } else if (main === '5. get up deployment address') {
+            } else if (main === '5. get deployment address') {
                 await setRPC();
-                const { publicAddress } = await getAccount();
-                const salt = await getSalt();
+                const deployerName = await askForDeployer();
 
-                const { initializable, initializeCalldata } =
-                    await askForInitializeCalldata();
+                if (deployerName === 'LSP16') {
+                    const computedAddress = LSP16ComputeAddress();
 
-                const address = await computeAddress(
-                    publicAddress,
-                    salt,
-                    initializable,
-                    initializeCalldata,
-                );
+                    console.log(computedAddress);
+                } else if (deployerName === 'LSP23') {
+                    const computedAddress = LSP23ComputeAddresses();
 
-                console.log(address);
-            } else if (main === '6. deploy basic up') {
+                    console.log(computedAddress);
+                }
+            } else if (main === '6. deploy contract') {
                 const { explorerBaseLink } = await setRPC();
-                const { account, publicAddress, chainId } = await getAccount();
-                const salt = await getSalt();
+                const { account, chainId } = await getAccount();
 
-                const { txHash, deployedContractAddress } = await deploy(
-                    account,
-                    chainId,
-                    publicAddress,
-                    salt,
-                );
+                const deployerName = await askForDeployer();
 
-                console.log(
-                    `Universal Profile address: ${deployedContractAddress}`,
-                );
-                console.log(`${explorerBaseLink}tx/${txHash}`);
-                console.log(
-                    `${explorerBaseLink}address/${deployedContractAddress}`,
-                );
-            } else if (main === '7. get your up addresses') {
+                if (deployerName === 'LSP16') {
+                    const { txHash, deployedContractAddress } =
+                        await LSP16DeployContract(account, chainId);
+
+                    console.log(`Contract address: ${deployedContractAddress}`);
+                    console.log(`${explorerBaseLink}tx/${txHash}`);
+                    console.log(
+                        `${explorerBaseLink}address/${deployedContractAddress}`,
+                    );
+                } else if (deployerName === 'LSP23') {
+                    const {
+                        txHash,
+                        primaryContractAddress,
+                        secondaryContractAddress,
+                    } = await LSP23DeployContracts(account, chainId);
+
+                    console.log(
+                        `Primary Contract Address: ${primaryContractAddress}`,
+                    );
+                    console.log(
+                        `Priamry Contract: ${explorerBaseLink}address/${primaryContractAddress}`,
+                    );
+                    console.log(
+                        `Secondary Contract Address: ${secondaryContractAddress}`,
+                    );
+                    console.log(
+                        `Secondary Contract: ${explorerBaseLink}address/${secondaryContractAddress}`,
+                    );
+                    console.log(`${explorerBaseLink}tx/${txHash}`);
+                }
+            } else if (main === '7. get your contract addresses') {
                 await setRPC();
                 const { publicAddress, chainId } = await getAccount();
+                const deployerName = await askForDeployer();
+                const contractName = await askForContractName();
 
-                const UPs = await getDeployedUPs(publicAddress, chainId);
+                const contractAddresses = await getDeployedContractAddresses(
+                    publicAddress,
+                    chainId,
+                    deployerName,
+                    contractName,
+                );
 
-                console.log(UPs);
+                console.log(contractAddresses);
             } else if (main === '8. interact with up') {
                 const { explorerBaseLink } = await setRPC();
                 const { account, publicAddress, chainId } = await getAccount();
-                const UPs = await getDeployedUPs(publicAddress, chainId);
+                const deployerName = await askForDeployer();
+                const contractName = await askForContractName();
 
-                const txHash = await interactWithUP(account, UPs);
+                if (contractName !== 'LSP0ERC725Account')
+                    throw new Error(
+                        "Error: Only 'LSP0ERC725Account' is supported now",
+                    );
+
+                const contractAddresses = await getDeployedContractAddresses(
+                    publicAddress,
+                    chainId,
+                    deployerName,
+                    contractName,
+                );
+
+                const txHash = await interactWithUP(account, contractAddresses);
 
                 console.log(`${explorerBaseLink}tx/${txHash}`);
             } else
